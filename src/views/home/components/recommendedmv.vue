@@ -49,7 +49,7 @@ export default {
           value.playCount = parseInt(value.playCount / 10000) + "万";
         }
       });
-      console.log(data);
+      // console.log(data);
     }
   }
 };

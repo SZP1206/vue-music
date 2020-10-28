@@ -19,9 +19,7 @@
         icon="el-icon-user-solid"
         @click.native="tologin"
       ></el-avatar>
-      <span class="nickname" :style="{ color: textColor }">{{
-        userInfo.nickname
-      }}</span>
+      <span class="nickname">{{ userInfo.nickname }}</span>
       <el-dialog title="用户登录" :visible.sync="dialogVisible" width="20%">
         <el-form
           :model="ruleForm"
@@ -51,7 +49,7 @@
           </el-form-item>
         </el-form>
       </el-dialog>
-      <div class="right-icon" :style="{ color: textColor }">
+      <div class="right-icon">
         <el-popover
           placement="bottom"
           width="200"
@@ -66,14 +64,14 @@
             <div
               class="white"
               style="width: 4.16625rem; height: 4.375rem; background: #f9f9f9; color: #292c32;"
-              @click="themeSwitch('white')"
+              @click="themeSwitch('light')"
             >
               经典白
             </div>
             <div
               class="black"
               style="width: 4.16625rem; height: 4.375rem; background: #292c32;"
-              @click="themeSwitch('black')"
+              @click="themeSwitch('dark')"
             >
               炫酷黑
             </div>
@@ -102,9 +100,8 @@
 
 <script>
 import { userLogin } from "@/api/index.js";
-// import {
-//     mapState
-// } from 'vuex'
+
+// import { mapState } from "vuex";
 export default {
   name: "Header",
   components: {},
@@ -166,7 +163,7 @@ export default {
       if (data !== null) {
         this.userInfo = data.profile;
       }
-    },
+    }, // 登录判断
     tologin() {
       let data = localStorage.getItem("userInfo");
       // console.log(data)
@@ -178,7 +175,7 @@ export default {
         message: "请不要重复登录！！",
         type: "warning"
       });
-    },
+    }, // 登录
     async login() {
       this.loading = true;
       const data = await userLogin({
@@ -206,7 +203,7 @@ export default {
         this.ruleForm.pass = "";
       }
       // console.log(newdata)
-    },
+    }, // 登录
     onLogin() {
       this.$refs["login-form"].validate(valid => {
         if (valid) {
@@ -215,43 +212,10 @@ export default {
           return false;
         }
       });
-    },
+    }, // 主题切换
     themeSwitch(theme) {
-      if (theme == "white") {
-        this.background = "#f9f9f9";
-        // console.log(theme, this.background);
-        let back = this.background;
-        this.textColor = "#292c32";
-        localStorage.setItem("textColor", this.textColor);
-        this.getHeader();
-        this.$emit("theme", {
-          theme,
-          back
-        });
-      } else if (theme == "black") {
-        this.background = "#292c32";
-        this.textColor = "#ffffff";
-        // console.log(this.textColor)
-        let back = this.background;
-        let textColor = this.textColor;
-        localStorage.setItem("textColor", this.textColor);
-        this.getHeader();
-        this.$emit("theme", {
-          theme,
-          back,
-          textColor
-        });
-      } else if (theme == "green") {
-        this.background = "#449e60";
-        this.textColor = "#ffffff";
-        let back = this.background;
-        localStorage.setItem("textColor", this.textColor);
-        this.getHeader();
-        this.$emit("theme", {
-          theme,
-          back
-        });
-      }
+      // this.thtme = theme
+      this.$store.commit("theme", theme);
     },
     getHeader() {
       if (localStorage.getItem("textColor") !== "") {
