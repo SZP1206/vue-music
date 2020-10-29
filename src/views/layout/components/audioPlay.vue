@@ -203,7 +203,7 @@ export default {
     getTheme() {
       this.themes = this.theme;
       this.scheduleColor = localStorage.getItem("scheduleColor");
-      console.log(this.theme);
+      // console.log(this.theme);
       // console.log(this.themes);
     },
     // 拖动音量滚动条

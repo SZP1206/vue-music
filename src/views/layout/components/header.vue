@@ -55,6 +55,7 @@
           width="200"
           trigger="manual"
           v-model="visible"
+          :popper-class="themeclass"
         >
           <h3 class="title" style="margin: 0">主题</h3>
           <div
@@ -108,6 +109,7 @@ export default {
   props: {},
   data() {
     return {
+      themeclass: "themeclass",
       input: "",
       visible: false,
       background: "",
@@ -215,6 +217,7 @@ export default {
     }, // 主题切换
     themeSwitch(theme) {
       // this.thtme = theme
+      this.themeclass = theme == "dark" ? "themeclass1" : "themeclass";
       this.$store.commit("theme", theme);
     },
     getHeader() {
@@ -228,7 +231,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .header {
   display: flex;
   justify-content: space-between;
@@ -326,5 +329,13 @@ export default {
       margin-left: 0.9375rem;
     }
   }
+}
+
+.themeclass {
+  background-color: #fff;
+}
+
+.themeclass1 {
+  background-color: #2d2f33;
 }
 </style>

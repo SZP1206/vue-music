@@ -6,6 +6,7 @@
       { 'dark-bg-color': theme == 'dark' },
       { 'green-bg-color': theme == 'green' }
     ]"
+    :style="[{ '--scrollbar-thumb-color': theme == 'light' ? 'red' : 'green' }]"
   >
     <el-container direction="vertical">
       <el-header
