@@ -5,6 +5,7 @@
         placement="bottom-start"
         :popper-class="allplaylist"
         width="500"
+        ref="popover"
       >
         <div class="classification">全部歌单分类</div>
         <el-button
@@ -16,7 +17,8 @@
           ]"
           plain
           round
-          >全部歌单</el-button
+          @click="allClick"
+          >{{ all.name }}</el-button
         >
         <div class="playlist-box">
           <!-- 语言 -->
@@ -28,8 +30,12 @@
               </div>
               <div class="playlist-right">
                 <ul>
-                  <li v-for="(item, index) in languages" :key="index">
-                    {{ item }}
+                  <li
+                    v-for="(item, index) in languages"
+                    :key="index"
+                    @click="onlabelClick(item.name)"
+                  >
+                    {{ item.name }}
                   </li>
                 </ul>
               </div>
@@ -42,8 +48,12 @@
               </div>
               <div class="playlist-right">
                 <ul>
-                  <li v-for="(item, index) in musicstyle" :key="index">
-                    {{ item }}
+                  <li
+                    v-for="(item, index) in musicstyle"
+                    :key="index"
+                    @click="onlabelClick(item.name)"
+                  >
+                    {{ item.name }}
                   </li>
                 </ul>
               </div>
@@ -56,8 +66,12 @@
               </div>
               <div class="playlist-right">
                 <ul>
-                  <li v-for="(item, index) in scenario" :key="index">
-                    {{ item }}
+                  <li
+                    v-for="(item, index) in scenario"
+                    :key="index"
+                    @click="onlabelClick(item.name)"
+                  >
+                    {{ item.name }}
                   </li>
                 </ul>
               </div>
@@ -70,8 +84,12 @@
               </div>
               <div class="playlist-right">
                 <ul>
-                  <li v-for="(item, index) in emotional" :key="index">
-                    {{ item }}
+                  <li
+                    v-for="(item, index) in emotional"
+                    :key="index"
+                    @click="onlabelClick(item.name)"
+                  >
+                    {{ item.name }}
                   </li>
                 </ul>
               </div>
@@ -84,8 +102,12 @@
               </div>
               <div class="playlist-right">
                 <ul>
-                  <li v-for="(item, index) in playtheme" :key="index">
-                    {{ item }}
+                  <li
+                    v-for="(item, index) in playtheme"
+                    :key="index"
+                    @click="onlabelClick(item.name)"
+                  >
+                    {{ item.name }}
                   </li>
                 </ul>
               </div>
@@ -103,108 +125,62 @@
           :style="[
             { 'border-color': themes == 'dark' ? '#23262c' : '#767676' }
           ]"
-          @click="alllabel = !alllabel"
+          @click="alllabelClick"
         >
-          全部
+          {{ labelname !== "" ? labelname : "全部" }}
         </div>
       </el-popover>
+    </div>
+    <!-- 热门标签 -->
+    <div class="hotlabel">
+      <span>热门标签:</span>
+      <span
+        class="hot-item"
+        :class="[
+          { 'hot-active': index == hotindex && themes == 'light' },
+          { 'hot-active1': index == hotindex && themes == 'dark' },
+          { 'hot-active2': index == hotindex && themes == 'green' }
+        ]"
+        v-for="(item, index) in hotlabel"
+        :key="index"
+        @click="hotLabel(item, index)"
+        >{{ item }}</span
+      >
     </div>
   </div>
 </template>
 
 <script>
+import { getcatlist, gethot } from "@/api/index.js";
 export default {
   name: "",
   components: {},
   props: {},
   data() {
     return {
-      index: "",
-      themes: "",
+      themes: "", //主题
       alllabel: false,
-      allplaylist: "allplaylist",
-      languages: ["华语", "欧美", "日语", "韩语", "粤语"],
-      musicstyle: [
-        "流行",
-        "摇滚",
-        "民谣",
-        "电子",
-        "舞曲",
-        "说唱",
-        "轻音乐",
-        "爵士",
-        "乡村",
-        " R&B/Soul",
-        "舞曲",
-        "说唱",
-        "古典",
-        "民族",
-        "英伦",
-        " 金属",
-        "朋克",
-        "蓝调",
-        "雷鬼",
-        "世界音乐",
-        "拉丁",
-        "New Age",
-        "古风",
-        "后摇",
-        "BossaNova"
-      ],
-      scenario: [
-        "清晨",
-        "夜晚",
-        "学习",
-        "工作",
-        "午休",
-        "下午茶",
-        "地铁",
-        "驾车",
-        "运动",
-        "旅行",
-        "散步",
-        "酒吧"
-      ],
-      emotional: [
-        "怀旧",
-        "清新",
-        "浪漫",
-        "伤感",
-        "治愈",
-        "放松",
-        "孤独",
-        "感动",
-        "兴奋",
-        "快乐",
-        "安静",
-        "思念"
-      ],
-      playtheme: [
-        "综艺",
-        "影视原声",
-        "ACG",
-        "儿童",
-        "70后",
-        "80后",
-        "90后",
-        "00后",
-        "网络歌曲",
-        "KTV",
-        "经典",
-        "翻唱",
-        "吉他",
-        "钢琴",
-        "乐器",
-        "榜单"
-      ]
+      allplaylist: "allplaylist", // 主题类
+      categories: "", //主题分类
+      all: "",
+      languages: [], // 语言
+      musicstyle: [], // 风格
+      scenario: [], // 场景
+      emotional: [], // 情感
+      playtheme: [], // 主题
+      hotlabel: ["全部"], //热门
+      hotindex: "",
+      labelname: ""
     };
   },
   computed: {
+    // 主题
     theme() {
       return this.$store.state.theme;
     }
   },
   watch: {
+    // 主题
     theme() {
       this.themes = this.$store.state.theme;
       this.allplaylist =
@@ -213,14 +189,20 @@ export default {
           : this.themes == "dark"
           ? "allplaylist1 allplaylist2"
           : "allplaylist3 allplaylist2";
-      console.log(this.themes);
+      // console.log(this.themes);
     }
   },
   created() {
+    // 主题
     this.getTheme();
+    // 获取歌单分类
+    this.getcatlist();
+    // 获取热门歌单分类
+    this.gethot();
   },
   mounted() {},
   methods: {
+    // 主题
     getTheme() {
       this.themes = this.theme;
       this.themes = localStorage.getItem("theme");
@@ -230,7 +212,56 @@ export default {
           : this.themes == "dark"
           ? "allplaylist1 allplaylist2"
           : "allplaylist3 allplaylist2";
-      console.log(this.themes);
+      // console.log(this.themes);
+    },
+    alllabelClick() {
+      this.alllabel = !this.alllabel;
+    }, // 获取歌单分类
+    async getcatlist() {
+      const { data } = await getcatlist();
+      // console.log(data)
+      this.categories = data.categories;
+      this.all = data.all;
+      data.sub.forEach(val => {
+        if (val.category == 0) {
+          this.languages.push(val);
+        }
+        if (val.category == 1) {
+          this.musicstyle.push(val);
+        }
+        if (val.category == 2) {
+          this.scenario.push(val);
+        }
+        if (val.category == 3) {
+          this.emotional.push(val);
+        }
+        if (val.category == 4) {
+          this.playtheme.push(val);
+        }
+      });
+    },
+    // 获取热门歌单分类
+    async gethot() {
+      const { data } = await gethot();
+      data.tags.forEach(val => {
+        this.hotlabel.push(val.name);
+      });
+
+      // console.log(data)
+    },
+    // 热门标签
+    hotLabel(name, index) {
+      this.hotindex = index;
+      this.labelname = name;
+      this.$emit("labelname", name);
+    }, // 全部标签
+    onlabelClick(name) {
+      this.labelname = name;
+      this.$refs.popover.doClose();
+      this.$emit("labelname", name);
+    },
+    allClick() {
+      this.$emit("labelname", "");
     }
   }
 };
@@ -243,10 +274,15 @@ export default {
     height: 2.5rem;
     line-height: 2.5rem;
     text-align: center;
+    font-size: 0.875rem;
     border-radius: 0.3125rem;
     box-shadow: 0 0 0.07143rem var(--border-tint);
     cursor: pointer;
     outline: none;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
   }
 
   .all-label-dark {
@@ -255,14 +291,38 @@ export default {
     color: #dcdde4;
     cursor: pointer;
   }
+  .hotlabel {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.125rem;
+    align-items: center;
+    margin: 1.25rem 0;
+    .hot-item {
+      display: inline-block;
+      width: 5rem;
+      height: 1.875rem;
+      line-height: 1.875rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .hot-active {
+      color: #eed2ee;
+    }
+    .hot-active1 {
+      color: var(--dark-active-color);
+    }
+    .hot-active2 {
+      color: var(--green-active-color);
+    }
+  }
 }
 
 .allplaylist2 {
   .classification {
     height: 2.8125rem;
     line-height: 45px;
-
-    // border-bottom: 1px solid #fff;
   }
 
   .all-btn {
@@ -272,24 +332,20 @@ export default {
     height: 21.42857rem;
     overflow-y: auto;
     .playlist-item {
-      // box-sizing: border-box;
       display: flex;
       justify-content: space-between;
-      // align-items: center;
       margin-bottom: 1.25rem;
 
       .playlist-left {
-        // width: 4.625rem;
-        // height: 1.875rem;
-        // line-height: 1.875rem;
         display: flex;
         justify-content: space-between;
-        // align-items: center;
+
         box-sizing: border-box;
         .iconfont {
           box-sizing: border-box;
           font-size: 1.375rem;
           margin-right: 0.625rem;
+          line-height: 1.875rem;
         }
       }
 
@@ -304,14 +360,17 @@ export default {
           list-style: none;
           flex: 5;
           li {
-            //    flex-wrap: wrap;
-            // box-sizing: border-box;
             width: 4.8125rem;
             height: 2.1875rem;
             line-height: 2.1875rem;
             text-align: center;
             border: 1px solid #ccc;
             cursor: pointer;
+            font-size: 0.875rem;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
           }
         }
       }
@@ -323,14 +382,9 @@ export default {
   background-color: #2d2f33;
   width: 32.5rem;
   color: #fff;
-  // background: unset !important;
-  // background-color: red;
 
   .all-btn {
     width: 100%;
-    // color: red;
-    // height: 2.1875rem;
-    // line-height: 2.1875rem;
     color: #000;
     text-align: center;
     border-radius: 0.625rem;
@@ -340,9 +394,6 @@ export default {
 
   .all-btn2 {
     width: 100%;
-    // color: red;
-    // height: 2.1875rem;
-    // line-height: 2.1875rem;
     color: #fff;
     text-align: center;
     border-radius: 0.625rem;
@@ -369,14 +420,9 @@ export default {
 .allplaylist {
   width: 32.5rem;
   background-color: #fff;
-  // background: unset !important;
-  // background-color: red;
 
   .all-btn1 {
     width: 100%;
-    // color: red;
-    // height: 2.1875rem;
-    // line-height: 2.1875rem;
     color: #000;
     text-align: center;
     border-radius: 0.625rem;

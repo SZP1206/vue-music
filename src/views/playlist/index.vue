@@ -1,25 +1,35 @@
 <template>
   <div class="playlist">
-    <playlist-style />
+    <playlist-style @labelname="labelname($event)" />
+    <all-playlist :labelname="name" />
   </div>
 </template>
 
 <script>
 import PlaylistStyle from "./components/playliststyle";
+import AllPlaylist from "./components/allplaylist";
 export default {
   name: "",
   components: {
-    PlaylistStyle
+    PlaylistStyle,
+    AllPlaylist
   },
   props: {},
   data() {
-    return {};
+    return {
+      name: "" //标签名称
+    };
   },
   computed: {},
   watch: {},
   created() {},
   mounted() {},
-  methods: {}
+  methods: {
+    labelname(e) {
+      this.name = e;
+      console.log(e);
+    }
+  }
 };
 </script>
 

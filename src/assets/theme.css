@@ -15,6 +15,7 @@
     --dark-header-bg-color: #202023;
     --dark-footer-bg-color: #212124;
     --dark-text-color: #ccc;
+    --dark-active-color: #b82525;
     --dark-border-active-color: #b82525;
     --dark-article-color: #fff;
     --dark-icon-active-color: #b82525;
@@ -29,6 +30,7 @@
     --green-aside-bg-color: #f9f9f9;
     --green-footer-bg-color: #f6f6f8;
     --green-icon-active-color: #3eb874;
+    --green-active-color: #3eb874;
     --green-text-tint: #3eb874;
     --green-hover-bg-color: #f9f9f9;
     --table-stripe-color: #f9f9f9;

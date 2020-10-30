@@ -44,3 +44,25 @@ export const getMv = () => {
     url: "/personalized/mv"
   });
 };
+// 获取歌单分类
+export const getcatlist = () => {
+  return request({
+    method: "GET",
+    url: "/playlist/catlist"
+  });
+};
+// 获取热门歌单分类
+export const gethot = () => {
+  return request({
+    method: "GET",
+    url: "/playlist/hot"
+  });
+};
+// 获取精品歌单
+export const getplaylist = params => {
+  return request({
+    method: "GET",
+    url: "/top/playlist",
+    params
+  });
+};

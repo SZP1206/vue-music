@@ -29,7 +29,7 @@
           ]"
         >
           <el-menu
-            default-active="/"
+            :default-active="$route.path"
             class="el-menu-vertical-demo"
             :class="[
               { 'is-active1': theme == 'light' },
